@@ -1,0 +1,25 @@
+name: Add Text to File and Commit
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Runs every 5 minutes
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Create and Write Text to File
+      run: |
+        echo $(date -u) " - Some message" > my_text_file.txt
+
+    - name: Commit Changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add my_text_file.txt
+        git commit -m "Add text to my_text_file.txt"
+        git push
