@@ -8,21 +8,28 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  update-records:
     runs-on: ubuntu-latest
+
+    env:
+      DATAFILE: yesterdays-records.txt
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Create and Write Text to File
-      run: |
-        echo $(date -u) " - Some message" > my_text_file.txt
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Write random data to file
+      run: python gen_records.py
 
     - name: Commit Changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add my_text_file.txt
-        git commit -m "Add text to my_text_file.txt"
+        git add $DATAFILE
+        git commit -m "add new daily records"
         git push
